@@ -16,7 +16,7 @@
     <style>
         /* Typography */
         body { font-family: 'Prompt', sans-serif; background-color: #f8fafc; overflow: hidden; }
-        .sarabun-font { font-family: 'TH Sarabun New', 'TH Sarabun PSK', 'TH SarabunPSK', 'Sarabun', sans-serif; }
+        .sarabun-font { font-family: 'TH Sarabun New', 'THSarabunNew', 'TH SarabunNew', 'TH Sarabun PSK', 'TH SarabunPSK', 'THSarabunPSK', 'Sarabun PSK', 'SarabunPSK', 'TH Sarabun', 'Sarabun', sans-serif; }
         /* กรณีเครื่องไม่มีฟอนต์ TH Sarabun New ติดตั้งอยู่ (เช่น แท็บเล็ต/เครื่องที่ไม่ใช่ของราชการ) ระบบจะตรวจจับแล้วสลับไปใช้ Google Font Sarabun แทนโดยอัตโนมัติ */
         html.font-fallback-google-sarabun .sarabun-font,
         html.font-fallback-google-sarabun .a4-text-16 {
@@ -113,7 +113,7 @@
 <body class="flex flex-col h-screen text-slate-800">
 
     <!-- Top Navbar -->
-    <header class="bg-white border-b border-slate-200 h-14 flex items-center justify-between px-4 z-20 flex-shrink-0 shadow-sm no-print">
+    <header class="bg-white border-b border-slate-200 h-14 flex items-center justify-between px-4 z-40 flex-shrink-0 shadow-sm no-print">
         <div class="flex items-center space-x-3">
             <button onclick="toggleLeftSidebar()" class="p-1.5 text-slate-500 hover:text-indigo-600 hover:bg-slate-100 rounded-lg transition" title="ซ่อน/แสดง แถบข้อมูลซ้าย">
                 <i class="fa-solid fa-bars-staggered text-sm"></i>
@@ -425,6 +425,11 @@
                                 <label class="flex items-center space-x-1.5 cursor-pointer"><input type="checkbox" id="colServiceYears" onchange="renderA4Preview(); triggerUserActionChange();" class="form-checkbox h-3 w-3 rounded-sm text-indigo-600 transition"> <span class="text-slate-600">อายุราชการ</span></label>
                                 <label class="flex items-center space-x-1.5 cursor-pointer"><input type="checkbox" id="colAge" onchange="renderA4Preview(); triggerUserActionChange();" class="form-checkbox h-3 w-3 rounded-sm text-indigo-600 transition"> <span class="text-slate-600">อายุ</span></label>
                             </div>
+                            <label class="flex items-center space-x-1.5 cursor-pointer pt-1">
+                                <input type="checkbox" id="colCustom" onchange="toggleCustomFieldLabelInput(); renderA4Preview(); triggerUserActionChange();" class="form-checkbox h-3 w-3 rounded-sm text-indigo-600 transition flex-shrink-0">
+                                <span class="text-slate-600 text-[10px]">พิมพ์เอง</span>
+                                <input type="text" id="customFieldLabel" oninput="toggleCustomFieldLabelInput(); renderA4Preview(); triggerUserActionChange();" placeholder="ชื่อหัวข้อ เช่น ห้องสอบ" class="hidden flex-1 px-1.5 py-0.5 text-[10px] border border-slate-200 rounded outline-none focus:border-indigo-500 bg-white">
+                            </label>
                         </div>
 
                         <label class="flex items-center space-x-1.5 cursor-pointer pt-2 border-t border-slate-200/60">
@@ -449,7 +454,7 @@
                             <input type="range" id="sigPos2" min="0" max="14" step="0.1" value="8.0" oninput="renderA4Preview(); triggerUserActionChange();" class="w-full accent-indigo-500 h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer">
                         </div>
                         <div class="space-y-1">
-                            <textarea id="sigLine3" rows="1" oninput="renderA4Preview(); triggerUserActionChange();" placeholder="บรรทัด 3 (ชื่อ)" class="w-full px-2 py-1 text-xs border border-slate-200 rounded outline-none focus:border-indigo-500 text-center bg-white mt-1 resize-y">ขยัน  ศึกษา</textarea>
+                            <textarea id="sigLine3" rows="1" oninput="renderA4Preview(); triggerUserActionChange();" placeholder="บรรทัด 3 (ชื่อ)" class="w-full px-2 py-1 text-xs border border-slate-200 rounded outline-none focus:border-indigo-500 text-center bg-white mt-1 resize-y">(ขยัน  ศึกษา)</textarea>
                             <input type="range" id="sigPos3" min="0" max="14" step="0.1" value="8.0" oninput="renderA4Preview(); triggerUserActionChange();" class="w-full accent-indigo-500 h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer">
                         </div>
                         <div class="space-y-1">
@@ -729,6 +734,10 @@
                         <select id="editUnit" onchange="toggleCustomInput('editUnit')" class="w-full px-3 py-1.5 border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 bg-slate-50"></select>
                         <input type="text" id="editUnitCustom" placeholder="พิมพ์สังกัดเอง เช่น ทอ.มาเลเซีย" class="hidden mt-1 w-full px-3 py-1.5 border border-indigo-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-indigo-100 bg-white">
                     </div>
+                    <div>
+                        <label id="editCustomValueLabel" class="text-[11px] font-bold text-slate-600 uppercase mb-1 block">ข้อมูลเพิ่มเติม (พิมพ์เอง)</label>
+                        <input type="text" id="editCustomValue" class="w-full px-3 py-1.5 border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 bg-slate-50">
+                    </div>
                     <div class="flex justify-end space-x-2 pt-2">
                         <button type="button" onclick="closeEditModal()" class="px-4 py-2 border border-slate-300 text-slate-600 hover:bg-slate-100 rounded-lg text-sm font-medium transition">ยกเลิก</button>
                         <button type="submit" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-bold shadow-sm transition">บันทึกการเปลี่ยนแปลง</button>
@@ -833,6 +842,10 @@
                         <label class="text-[11px] font-bold text-slate-600 uppercase mb-1 block">สังกัด</label>
                         <select id="addUnit" onchange="toggleCustomInput('addUnit')" class="w-full px-3 py-1.5 border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-emerald-100 focus:border-emerald-500 bg-slate-50"></select>
                         <input type="text" id="addUnitCustom" placeholder="พิมพ์สังกัดเอง เช่น ทอ.มาเลเซีย" class="hidden mt-1 w-full px-3 py-1.5 border border-emerald-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-emerald-100 bg-white">
+                    </div>
+                    <div>
+                        <label id="addCustomValueLabel" class="text-[11px] font-bold text-slate-600 uppercase mb-1 block">ข้อมูลเพิ่มเติม (พิมพ์เอง)</label>
+                        <input type="text" id="addCustomValue" class="w-full px-3 py-1.5 border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-emerald-100 focus:border-emerald-500 bg-slate-50">
                     </div>
                     <div class="flex justify-end space-x-2 pt-2">
                         <button type="button" onclick="closeAddModal()" class="px-4 py-2 border border-slate-300 text-slate-600 hover:bg-slate-100 rounded-lg text-sm font-medium transition">ยกเลิก</button>
@@ -1147,6 +1160,19 @@
                     rightResizer.addEventListener('pointercancel', onPointerUp);
                 });
             }
+        }
+
+        // แสดง/ซ่อนช่องกรอกชื่อหัวข้อ "พิมพ์เอง" ตามสถานะ checkbox และอัปเดตชื่อ label ในฟอร์มเพิ่ม/แก้ไขให้ตรงกับหัวข้อที่ตั้งไว้
+        function toggleCustomFieldLabelInput() {
+            const checked = document.getElementById('colCustom')?.checked;
+            const input = document.getElementById('customFieldLabel');
+            if (input) input.classList.toggle('hidden', !checked);
+
+            const labelText = (document.getElementById('customFieldLabel')?.value || '').trim() || 'ข้อมูลเพิ่มเติม (พิมพ์เอง)';
+            const editLabel = document.getElementById('editCustomValueLabel');
+            const addLabel = document.getElementById('addCustomValueLabel');
+            if (editLabel) editLabel.innerText = labelText;
+            if (addLabel) addLabel.innerText = labelText;
         }
 
         function toggleLeftSidebar() {
@@ -1510,6 +1536,7 @@
             document.getElementById('editBranch').value = person.branch || '';
             document.getElementById('editPosition').value = person.position || '';
             document.getElementById('editPosition2').value = person.position2 || '';
+            document.getElementById('editCustomValue').value = person.customValue || '';
             
             const unitSelect = document.getElementById('editUnit');
             unitSelect.innerHTML = RTAF_UNITS.map(u => `<option value="${u}">${u}</option>`).join('') + `<option value="__custom__">+ ระบุเอง...</option>`;
@@ -1530,6 +1557,7 @@
             document.getElementById('addUnitCustom').classList.add('hidden');
             const unitSelect = document.getElementById('addUnit');
             unitSelect.innerHTML = RTAF_UNITS.map(u => `<option value="${u}">${u}</option>`).join('') + `<option value="__custom__">+ ระบุเอง...</option>`;
+            toggleCustomFieldLabelInput();
             document.getElementById('addCandidateModal').classList.remove('hidden');
         }
 
@@ -1554,6 +1582,7 @@
                 position: cleanPositionData(document.getElementById('addPosition').value),
                 position2: cleanPositionData(document.getElementById('addPosition2').value),
                 unit: getSelectOrCustomValue('addUnit'),
+                customValue: document.getElementById('addCustomValue')?.value || '',
             };
 
             importedCandidates.push(JSON.parse(JSON.stringify(person)));
@@ -1593,6 +1622,7 @@
             person.branch = document.getElementById('editBranch').value;
             person.position = cleanPositionData(document.getElementById('editPosition').value);
             person.position2 = cleanPositionData(document.getElementById('editPosition2').value);
+            person.customValue = document.getElementById('editCustomValue').value;
             person.unit = getSelectOrCustomValue('editUnit');
 
             closeEditModal();
@@ -2424,14 +2454,29 @@
             }
         }
 
-        // ถ้าไม่พบ TH Sarabun New ในเครื่อง ให้สลับไปใช้ Google Font Sarabun ขนาด 11pt น้ำหนัก 200 แทนโดยอัตโนมัติ
+        // รายชื่อฟอนต์ตระกูล TH Sarabun ที่พบเจอได้ในเครื่องจริง - บางเครื่อง/บางระบบติดตั้งฟอนต์นี้ไว้ภายใต้ชื่อที่ต่างกันเล็กน้อย
+        // (เช่น "TH Sarabun PSK" แทน "TH Sarabun New") ถ้าเช็คแค่ชื่อเดียวอาจตรวจไม่พบทั้งที่มีฟอนต์อยู่จริง
+        // จึงต้องเช็คทุกชื่อที่เป็นไปได้ เจอสักชื่อเดียวก็ถือว่ามีฟอนต์นี้แล้ว
+        const TH_SARABUN_NAME_VARIANTS = [
+            'TH Sarabun New',
+            'THSarabunNew',
+            'TH SarabunNew',
+            'TH Sarabun PSK',
+            'TH SarabunPSK',
+            'THSarabunPSK',
+            'Sarabun PSK',
+            'SarabunPSK',
+            'TH Sarabun',
+        ];
+
+        // ถ้าไม่พบฟอนต์ตระกูล TH Sarabun ชื่อใดๆ เลยในเครื่อง ให้สลับไปใช้ Google Font Sarabun ขนาด 11pt น้ำหนัก 200 แทนโดยอัตโนมัติ
         // (ขนาด/น้ำหนักต่างจาก TH Sarabun New เพราะ Sarabun ของ Google มีสัดส่วนตัวอักษรใหญ่กว่า ต้องลดขนาด/น้ำหนักลงเพื่อให้หน้าตาใกล้เคียงของเดิม)
         async function detectThSarabunFont() {
             try {
                 if (document.fonts && document.fonts.ready) await document.fonts.ready;
             } catch (e) { /* เบราว์เซอร์ไม่รองรับ document.fonts - ข้ามไปตรวจแบบ canvas ต่อได้เลย */ }
 
-            const available = isFontAvailable('TH Sarabun New');
+            const available = TH_SARABUN_NAME_VARIANTS.some(name => isFontAvailable(name));
             document.documentElement.classList.toggle('font-fallback-google-sarabun', !available);
         }
 
@@ -2449,6 +2494,8 @@
                 const sUnt = document.getElementById('colUnit')?.checked ?? true;
                 const sYrs = document.getElementById('colServiceYears')?.checked ?? false;
                 const sAge = document.getElementById('colAge')?.checked ?? false;
+                const sCustom = document.getElementById('colCustom')?.checked ?? false;
+                const customFieldLabel = (document.getElementById('customFieldLabel')?.value || '').trim();
                 const tabPos = parseFloat(document.getElementById('detailTabPos')?.value || '9.0').toFixed(1);
                 const tabPosEl = document.getElementById('tabPosVal');
                 if (tabPosEl) tabPosEl.innerText = tabPos + ' cm';
@@ -2502,7 +2549,12 @@
                     }).join('') + `</div>`;
 
                 const showFooter = document.getElementById('showFooterNote')?.checked ?? true;
-                const footerHtml = showFooter ? `<div style="margin-top: auto; padding-top: 1em; font-size: 14pt !important; line-height: 1.2; flex-shrink: 0; text-align: left;" class="text-slate-900">หมายเหตุ จัดทำโดยระบบจัดทำรายชื่อผู้เข้ารับการศึกษา ข้อมูลจากระบบ HRIS${extractedDataDate ? ` ณ ${toThaiDigits(extractedDataDate)}` : ''}</div>` : `<div style="margin-top: auto;"></div>`;
+                // ตอน fallback (ไม่มีฟอนต์ TH Sarabun ในเครื่อง) ลดขนาดตัวหมายเหตุลงเหลือ 10pt ตามที่ต้องการ
+                // คำนวณตรงนี้เป็น inline style ไปเลย เพราะ style เดิมของบรรทัดนี้เป็น "font-size: 14pt !important" อยู่แล้ว
+                // ถ้าใช้กฎ CSS ภายนอกมาบังคับทับ (แม้จะมี !important เหมือนกัน) inline !important จะชนะเสมอ ไม่มีทางเขียนทับได้
+                const isFallbackFont = document.documentElement.classList.contains('font-fallback-google-sarabun');
+                const footerFontSize = isFallbackFont ? '10pt' : '14pt';
+                const footerHtml = showFooter ? `<div style="margin-top: auto; padding-top: 1em; font-size: ${footerFontSize} !important; line-height: 1.2; flex-shrink: 0; text-align: left;" class="text-slate-900">หมายเหตุ จัดทำโดยระบบจัดทำรายชื่อผู้เข้ารับการศึกษา ข้อมูลจากระบบ HRIS${extractedDataDate ? ` ณ ${toThaiDigits(extractedDataDate)}` : ''}</div>` : `<div style="margin-top: auto;"></div>`;
 
                 if (annexCandidates.length === 0) {
                     previewContainer.innerHTML = `<div class="a4-page sarabun-font">${headerHtml}<div class="text-center py-20 text-slate-300 a4-text-16">(พื้นที่แสดงผลเอกสารว่าง)</div></div>`;
@@ -2625,6 +2677,11 @@
                         }
 
                         if (sUnt && c.unit) pts.push(`สังกัด ${makeEditable(toThaiDigits(c.unit), c.id, 'candidate_unit')}`);
+                        if (sCustom && c.customValue) {
+                            // ถ้าไม่ได้ตั้งชื่อหัวข้อไว้ (เว้นว่าง) ให้แสดงแค่ค่าที่พิมพ์ไว้เฉยๆ ไม่ต้องมีข้อความนำหน้าบังคับ
+                            const cvSpan = makeEditable(toThaiDigits(c.customValue), c.id, 'candidate_custom');
+                            pts.push(customFieldLabel ? `${customFieldLabel} ${cvSpan}` : cvSpan);
+                        }
                         if (sYrs && c.serviceYears) pts.push(`อายุราชการ ${makeEditable(toThaiDigits(c.serviceYears), c.id, 'candidate_service')}`);
                         if (sAge && c.age) pts.push(`อายุ ${makeEditable(toThaiDigits(c.age), c.id, 'candidate_age')}`);
 
@@ -2853,6 +2910,7 @@
                     else if (prop === 'position') c.position = newText;
                     else if (prop === 'position2') c.position2 = newText;
                     else if (prop === 'unit') c.unit = newText;
+                    else if (prop === 'custom') c.customValue = newText;
                     else if (prop === 'service') c.serviceYears = newText;
                     else if (prop === 'age') c.age = newText;
                     needsLeftPanelUpdate = true;
@@ -3047,6 +3105,12 @@
                         age: { name: 'อายุ', count: 0 }
                     };
 
+                    // ถ้าตั้งชื่อหัวข้อ "พิมพ์เอง" ไว้แล้ว และไฟล์ Excel มีคอลัมน์ชื่อตรงกันพอดี ให้ดึงค่ามาใส่ให้อัตโนมัติ
+                    const customFieldLabelForImport = (document.getElementById('customFieldLabel')?.value || '').trim();
+                    if (customFieldLabelForImport) {
+                        checkFields.customValue = { name: customFieldLabelForImport, count: 0 };
+                    }
+
                     importedCandidates = json.map((row, idx) => {
                         let rank = '', firstName = '', lastName = '';
                         // เก็บชื่อคอลัมน์ที่ถูกใช้ไปแล้วในแถวนี้ กันไม่ให้ฟิลด์อื่นแย่งจับคอลัมน์เดียวกันซ้ำ (เช่น "อายุ" ไปจับคอลัมน์ "อายุราชการ" ที่ถูกใช้แล้ว)
@@ -3093,6 +3157,7 @@
                             position: cleanPositionData(rawPos),
                             position2: '',
                             unit: cleanUnitData(findRowValue(row, ['สังกัด', 'unit'], usedColumns)),
+                            customValue: customFieldLabelForImport ? findRowValue(row, [customFieldLabelForImport], usedColumns) : '',
                             serviceYears: formatDurationSlash(findRowValue(row, ['อายุราชการ', 'serviceyears'], usedColumns)),
                             age: formatDurationSlash(findRowValue(row, ['อายุ', 'age'], usedColumns)),
                             maritalStatus: findRowValue(row, ['สถานภาพ', 'โสด/สมรส'], usedColumns) || 'โสด',
@@ -3114,6 +3179,7 @@
                         if (cand.eduForeignStartDate) checkFields.eduForeignStart.count++;
                         if (cand.eduForeignGradDate) checkFields.eduForeignGrad.count++;
                         if (cand.serviceYears) checkFields.serviceYears.count++;
+                        if (cand.customValue && checkFields.customValue) checkFields.customValue.count++;
                         if (cand.age) checkFields.age.count++;
 
                         return cand;
@@ -3208,7 +3274,7 @@
                 headerLine1: document.getElementById('headerLine1')?.value, headerLine2: document.getElementById('headerLine2')?.value, headerLine3: document.getElementById('headerLine3')?.value, headerLine4: document.getElementById('headerLine4')?.value, headerLine5: document.getElementById('headerLine5')?.value, headerLine6: document.getElementById('headerLine6')?.value,
                 headerStartDate: document.getElementById('headerStartDate')?.value, headerEndDate: document.getElementById('headerEndDate')?.value, headerOrderDate: document.getElementById('headerOrderDate')?.value, headerLine3Prefix: document.getElementById('headerLine3Prefix')?.value, headerLine3Suffix: document.getElementById('headerLine3Suffix')?.value, headerLine5Unit: document.getElementById('headerLine5Unit')?.value,
                 itemSpacing: spacingRadio ? spacingRadio.value : '0pt', detailTabPos: document.getElementById('detailTabPos')?.value,
-                colRankName: document.getElementById('colRankName')?.checked ?? true, colIdCard: document.getElementById('colIdCard')?.checked ?? true, colBranch: document.getElementById('colBranch')?.checked ?? false, colPosition: document.getElementById('colPosition')?.checked ?? true, colUnit: document.getElementById('colUnit')?.checked ?? true, colServiceYears: document.getElementById('colServiceYears')?.checked ?? false, colAge: document.getElementById('colAge')?.checked ?? false, showFooterNote: document.getElementById('showFooterNote')?.checked ?? true,
+                colRankName: document.getElementById('colRankName')?.checked ?? true, colIdCard: document.getElementById('colIdCard')?.checked ?? true, colBranch: document.getElementById('colBranch')?.checked ?? false, colPosition: document.getElementById('colPosition')?.checked ?? true, colUnit: document.getElementById('colUnit')?.checked ?? true, colServiceYears: document.getElementById('colServiceYears')?.checked ?? false, colAge: document.getElementById('colAge')?.checked ?? false, colCustom: document.getElementById('colCustom')?.checked ?? false, customFieldLabel: document.getElementById('customFieldLabel')?.value ?? '', showFooterNote: document.getElementById('showFooterNote')?.checked ?? true,
                 sigLine1: document.getElementById('sigLine1')?.value, sigLine2: document.getElementById('sigLine2')?.value, sigLine3: document.getElementById('sigLine3')?.value, sigLine4: document.getElementById('sigLine4')?.value, sigDatePicker: document.getElementById('sigDatePicker')?.value,
                 sigPos1: document.getElementById('sigPos1')?.value, sigPos2: document.getElementById('sigPos2')?.value, sigPos3: document.getElementById('sigPos3')?.value, sigPos4: document.getElementById('sigPos4')?.value, sigPos5: document.getElementById('sigPos5')?.value
             };
@@ -3534,6 +3600,9 @@ ${pagesHtml}
             setCheck('colUnit', s.colUnit); 
             setCheck('colServiceYears', s.colServiceYears); 
             setCheck('colAge', s.colAge); 
+            setCheck('colCustom', s.colCustom);
+            setVal('customFieldLabel', s.customFieldLabel);
+            toggleCustomFieldLabelInput();
             setCheck('showFooterNote', s.showFooterNote);
             
             if (s.itemSpacing) { 
